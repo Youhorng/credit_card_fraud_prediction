@@ -29,7 +29,7 @@ app.include_router(fraud.router)
 
 # Root endpoint 
 @app.get("/", tags=["root"])
-async def root():
+def root():
     """Root endpoint - API information"""
     return {
         "name": "Credit Card Fraud Detection API",
@@ -48,7 +48,7 @@ async def root():
 
 # Custom exception handlers
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request, exc):
+def validation_exception_handler(request, exc):
     """Handle validation errors with a friendly message"""
     return JSONResponse(
         status_code=422,
@@ -56,7 +56,7 @@ async def validation_exception_handler(request, exc):
     )
 
 @app.exception_handler(HTTPException)
-async def http_exception_handler(request, exc):
+def http_exception_handler(request, exc):
     """Custom HTTP exception handler"""
     return JSONResponse(
         status_code=exc.status_code,
@@ -64,7 +64,7 @@ async def http_exception_handler(request, exc):
     )
 
 @app.exception_handler(Exception)
-async def general_exception_handler(request, exc):
+def general_exception_handler(request, exc):
     """Handle unexpected errors"""
     return JSONResponse(
         status_code=500,
@@ -73,5 +73,5 @@ async def general_exception_handler(request, exc):
 
 # Run the application
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 5004))
     uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)
