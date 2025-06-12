@@ -74,7 +74,7 @@ class MetricsService:
             print("MongoDB connection closed")
 
 # Example usage:
-metric = MetricsService()
-result = metric.get_model_metrics("1.0.0")
-print(result)  
-metric.close()
+# metric = MetricsService()
+# result = metric.get_model_metrics("1.0.0")
+# print(result)  
+# metric.close()
