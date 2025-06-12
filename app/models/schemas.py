@@ -1,4 +1,4 @@
-from pypdantic import BaseModel, Field # type: ignore
+from pydantic import BaseModel, Field # type: ignore
 from typing import Dict, List, Any, Optional
 from datetime import datetime 
 
@@ -12,8 +12,8 @@ class TransactionRequest(BaseModel):
     state: str = Field(..., description="State where the transaction occurred")
     transaction_number: str = Field(..., description="Unique identifier for the transaction")
 
-    class Config:
-        schema_extra = {
+    model_config = {  # Updated to use model_config instead of Config class
+        "json_schema_extra": {  # Changed from schema_extra to json_schema_extra
             "example": {
                 "transaction_amount": 150.55,
                 "is_nighttime": 1,
@@ -24,23 +24,42 @@ class TransactionRequest(BaseModel):
                 "transaction_number": "tx_1001"
             }
         }
+    }
 
 # Schema for the response from the API after prediction
 class PredictionResponse(BaseModel):
     transaction_id: str = Field(..., description="Unique identifier for the transaction")
-    is_fraud: str = Field(..., description="Prediction result: 'Fraud' for fraud, 'Normal' for not fraud")
+    is_fraud: bool = Field(..., description="Prediction result: '1' for fraud, '0' for not fraud")
+    label: str = Field(..., description="Label indicating if the transaction is fraudulent or not")
     fraud_probability: float = Field(..., description="Probability of the transaction being fraudulent")
     timestamp: datetime = Field(..., description="Timestamp of the prediction")
 
+class ModelInfoResponse(BaseModel):
+    """Schema for model information response"""
+    model_name: str = Field(..., description="Name of the model")
+    model_version: str = Field(..., description="Version of the model")
+    threshold: float = Field(..., description="Classification threshold for fraud detection")
+    
+    model_config = {  # Updated configuration
+        "protected_namespaces": (),  # Disable protected namespace warnings
+        "json_schema_extra": {
+            "example": {
+                "model_name": "XGBoost Fraud Detection Model",
+                "model_version": "1.0.0",
+                "threshold": 0.5
+            }
+        }
+    }
+
 # Schema for the model performance metrics 
-class ModelMetrics(BaseModel):
+class ModelMetricsResponse(BaseModel):
     f1_score: float
     precision: float
     recall: float
     average_precision: float
 
-    class Config:
-        schema_extra = {
+    model_config = {  # Updated to use model_config
+        "json_schema_extra": {  # Changed from schema_extra
             "example": {
                 "f1_score": 0.85,
                 "precision": 0.88,
@@ -48,3 +67,4 @@ class ModelMetrics(BaseModel):
                 "average_precision": 0.90
             }
         }
+    }
