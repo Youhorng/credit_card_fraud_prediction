@@ -61,6 +61,7 @@ class ModelMetricsResponse(BaseModel):
     average_precision: float
 
     model_config = {  # Updated to use model_config
+        "protected_namespaces": (),  # Disable protected namespace warnings
         "json_schema_extra": {  # Changed from schema_extra
             "example": {
                 "_id": "684aba8643581818783037ea",
