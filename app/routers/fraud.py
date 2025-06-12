@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Depends  # type: ignore
 from datetime import datetime 
 import pandas as pd
-import typing as List
+from typing import List, Dict, Any
 
 from app.models.schemas import TransactionRequest, PredictionResponse, ModelInfoResponse, ModelMetricsResponse
 from app.services.fraud_services import FraudDetectionService
@@ -78,12 +78,20 @@ def get_metrics_service():
         service.close()
 
 @router.get("/metrics", response_model=ModelMetricsResponse)
-async def get_model_metrics(
-    metrics_service: MetricsService = Depends(get_metrics_service)
-):
-    """Get model performance metrics"""
+async def get_model_metrics(model_version: str = "1.0.0",
+                            service: MetricsService = Depends(get_metrics_service)):
+    """
+    Get model performance metrics.
+    Args:
+        model_version: Version of the model to retrieve metrics for
+        service: MetricsService instance
+    Returns:
+        ModelMetricsResponse containing model performance metrics
+    """
     try:
-        metrics = metrics_service.get_model_metrics()
+        metrics = service.get_model_metrics(model_version)
+        if not metrics:
+            raise HTTPException(status_code=404, detail="Metrics not found")
         return metrics
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error retrieving metrics: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
