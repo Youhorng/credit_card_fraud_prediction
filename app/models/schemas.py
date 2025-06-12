@@ -53,6 +53,8 @@ class ModelInfoResponse(BaseModel):
 
 # Schema for the model performance metrics 
 class ModelMetricsResponse(BaseModel):
+    _id: str
+    model_version: str
     f1_score: float
     precision: float
     recall: float
@@ -61,6 +63,8 @@ class ModelMetricsResponse(BaseModel):
     model_config = {  # Updated to use model_config
         "json_schema_extra": {  # Changed from schema_extra
             "example": {
+                "_id": "684aba8643581818783037ea",
+                "model_version": "1.0.0",
                 "f1_score": 0.85,
                 "precision": 0.88,
                 "recall": 0.82,
