@@ -15,7 +15,7 @@ def get_fraud_service():
     return FraudDetectionService()
 
 @router.post("/predict", response_model=PredictionResponse)
-async def predict_fraud(request: TransactionRequest,
+def predict_fraud(request: TransactionRequest,
                         service: FraudDetectionService = Depends(get_fraud_service)):
     """
     Predict if a transaction is fraudulent.
@@ -55,7 +55,7 @@ async def predict_fraud(request: TransactionRequest,
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.get("/model_info", response_model=ModelInfoResponse)
-async def get_model_info(service: FraudDetectionService = Depends(get_fraud_service)):
+def get_model_info(service: FraudDetectionService = Depends(get_fraud_service)):
     """
     Get information about the fraud detection model.
     Args:
@@ -78,7 +78,7 @@ def get_metrics_service():
         service.close()
 
 @router.get("/metrics", response_model=ModelMetricsResponse)
-async def get_model_metrics(model_version: str = "1.0.0",
+def get_model_metrics(model_version: str = "1.0.0",
                             service: MetricsService = Depends(get_metrics_service)):
     """
     Get model performance metrics.
