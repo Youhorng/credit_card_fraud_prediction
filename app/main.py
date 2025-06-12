@@ -8,7 +8,7 @@ import os
 
 from app.routers import fraud
 
-# Create FastAPI application instance
+# Create FastAPI application 
 app = FastAPI(title="Credit Card Fraud Detection API",
               description="API for detecting fraudulent credit card transactions using machine learning models.",
              version="1.0.0",
